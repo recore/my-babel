@@ -27,14 +27,14 @@ function generateAlias() {
 }
 
 export default {
-  input: 'src/index.js',
+  input: 'packages/main/index.js',
   output: {
     file: 'lib/babel.js',
     name: 'MyBabel',
     format: 'iife',
   },
   plugins: [
-    ignore(['module', 'fs', 'net', 'path', 'buffer']),
+    ignore(['module', 'fs', 'net', 'buffer']),
     json(),
     alias(generateAlias()),
     resolve({

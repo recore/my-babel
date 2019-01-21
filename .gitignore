@@ -51,3 +51,4 @@ packages/babel-preset-env-standalone/babel-preset-env.min.js
 /packages/babel-parser/build
 .idea/
 /.changelog
+lib/
