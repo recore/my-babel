@@ -1,5 +1,0 @@
-{
-  "sourceType": "module",
-  "plugins": ["typescript"],
-  "throws": "The rest type must be the last type (1:19)"
-}
