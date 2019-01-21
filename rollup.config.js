@@ -16,7 +16,9 @@ function generateAlias() {
   const paths = readdirSync(join(__dirname, 'packages'));
   const moduleAlias = {};
   paths.forEach(mod => {
-    if (mod.slice(0, 6) === 'babel-') {
+    if (mod === 'babel-parser') {
+      moduleAlias['@babel/parser'] = join(__dirname, 'packages', 'vx-ast-parser/src/index.js');
+    } else if (mod.slice(0, 6) === 'babel-') {
       moduleAlias[`@babel/${mod.slice(6)}`] = join(__dirname, 'packages', mod, 'src/index.js');
     }
   });
