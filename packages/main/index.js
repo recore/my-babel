@@ -193,7 +193,7 @@ registerPlugins({
   "syntax-class-properties": syntaxclassproperties,
   "syntax-object-rest-spread": syntaxobjectrestspread,
   "syntax-async-generators": syntaxasyncgenerators,
-  "syntax-decorators": syntaxdecorator,
+  "syntax-decorators": syntaxdecorators,
   "syntax-do-expressions": syntaxdoexpressions,
   "syntax-dynamic-import": syntaxdynamicimport,
   "syntax-export-default-from": syntaxexportdefaultfrom,

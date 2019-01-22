@@ -1,0 +1,66 @@
+<!--变量绑定--><span {...xxx}>你好，{username |> format}！</span>
+
+<!--双向绑定（1）-->
+输入姓名：<input x-model={username} />
+<!-- 相当于 value={username} onChange={(val) => username = val} -->
+
+<!--双向绑定（2）-->
+输入姓名：<input x-field={form1.username} />
+<!-- 相当于 value={form1.username.value} onChange={(val) => form1.username.value = val} -->
+
+<!--双向绑定（3）-->
+<form x-form={form1}>
+  输入姓名：<input x-field="username" />
+  <!-- 相当于 value={form1.username.value} onChange={(val) => form1.username.value = val} -->
+</form>
+<!--无论上面哪一种绑定，代表一种语法糖，会在被编译时展开，value 属性将会失效 -->
+
+<!--结构：迭代-->
+<div x-for={heros} x-each="hero,key" key={key}>
+  {hero.name}
+</div>
+<!--
+其它写法
+for="(hero, key) of heros"
+for="hero of heros"
+for="key in heros"
+-->
+
+<!--结构：条件-->
+<span x-if={role.isAdmin()}>管理员</span>
+<span x-else-if={role.isRoot()}>根用户</span>
+<span x-else>用户</span>
+
+<!--动作绑定-->
+<button @click.enter={gotoAnywhere}>跳转</button>
+<button @click="gotoAnywhere">跳转</button>
+
+<!--视图模型暴露-->
+<input #user x-model={username} />
+<div x-if={user.value === 'admin'}>
+  你输入了admin
+</div>
+<!-- 视图模型是对 UI 的 props、reactElement 的相关包装，这里的 value 是响应式的，考虑如何实现 -->
+
+<!--类名绑定-->
+<div className={{ hidden: isHidden, show: isShow }}>
+  样式绑定
+</div>
+<!-- classnames 用法 [class1, class2, { class3: flag }]-->
+
+<!--响应式优化-->
+<div a={a}>
+
+</div>
+<input value={b}/>
+<!--
+  visionx 一整个视图，
+  当一个外界响应式变量发生变化时，整个视图刷新是不必要的，
+  应该按需刷新，这就需要一层壳来包裹，
+  这层壳好处很多，但不是任何时候都可以用，
+  父子组件有联系，加了壳会破坏这种联系，这个时候就不能用 “响应式优化”
+-->
+
+<Tabs data={data?.abc}>
+  <span delegate-of="title" each="item">{item.title}</span>
+</Tabs>

@@ -1,25 +1,9 @@
 // @flow
-import fs from "fs";
 
-import loadConfig, { type InputOptions } from "./config";
-import {
-  runSync,
-  runAsync,
-  type FileResult,
-  type FileResultCallback,
-} from "./transformation";
-
-import typeof * as transformFileBrowserType from "./transform-file-browser";
-import typeof * as transformFileType from "./transform-file";
-
-// Kind of gross, but essentially asserting that the exports of this module are the same as the
-// exports of transform-file-browser, since this file may be replaced at bundle time with
-// transform-file-browser.
-((({}: any): $Exact<transformFileBrowserType>): $Exact<transformFileType>);
-
+// duplicated from transform-file so we do not have to import anything here
 type TransformFile = {
-  (filename: string, callback: FileResultCallback): void,
-  (filename: string, opts: ?InputOptions, callback: FileResultCallback): void,
+  (filename: string, callback: Function): void,
+  (filename: string, opts: ?Object, callback: Function): void,
 };
 
 export const transformFile: TransformFile = (function transformFile(
@@ -27,69 +11,19 @@ export const transformFile: TransformFile = (function transformFile(
   opts,
   callback,
 ) {
-  let options;
   if (typeof opts === "function") {
     callback = opts;
-    opts = undefined;
   }
 
-  if (opts == null) {
-    options = { filename };
-  } else if (opts && typeof opts === "object") {
-    options = {
-      ...opts,
-      filename,
-    };
-  }
-
-  process.nextTick(() => {
-    let cfg;
-    try {
-      cfg = loadConfig(options);
-      if (cfg === null) return callback(null, null);
-    } catch (err) {
-      return callback(err);
-    }
-
-    // Reassignment to keep Flow happy.
-    const config = cfg;
-
-    fs.readFile(filename, "utf8", function(err, code: string) {
-      if (err) return callback(err, null);
-
-      runAsync(config, code, null, callback);
-    });
-  });
+  callback(new Error("Transforming files is not supported in browsers"), null);
 }: Function);
 
-export function transformFileSync(
-  filename: string,
-  opts: ?InputOptions,
-): FileResult | null {
-  let options;
-  if (opts == null) {
-    options = { filename };
-  } else if (opts && typeof opts === "object") {
-    options = {
-      ...opts,
-      filename,
-    };
-  }
-
-  const config = loadConfig(options);
-  if (config === null) return null;
-
-  return runSync(config, fs.readFileSync(filename, "utf8"));
+export function transformFileSync() {
+  throw new Error("Transforming files is not supported in browsers");
 }
 
-export function transformFileAsync(
-  filename: string,
-  opts: ?InputOptions,
-): Promise<FileResult | null> {
-  return new Promise((res, rej) => {
-    transformFile(filename, opts, (err, result) => {
-      if (err == null) res(result);
-      else rej(err);
-    });
-  });
+export function transformFileAsync() {
+  return Promise.reject(
+    new Error("Transforming files is not supported in browsers"),
+  );
 }

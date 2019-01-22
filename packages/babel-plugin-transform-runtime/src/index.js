@@ -1,5 +1,5 @@
 import path from "path";
-import resolve from "resolve";
+// import resolve from "resolve";
 import { declare } from "@babel/helper-plugin-utils";
 import { addDefault, isModule } from "@babel/helper-module-imports";
 import { types as t } from "@babel/core";
@@ -7,6 +7,7 @@ import { types as t } from "@babel/core";
 import getDefinitions from "./definitions";
 
 function resolveAbsoluteRuntime(moduleName: string, dirname: string) {
+  return null;
   try {
     return path.dirname(
       resolve.sync(`${moduleName}/package.json`, { basedir: dirname }),

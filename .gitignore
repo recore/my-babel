@@ -52,3 +52,4 @@ packages/babel-preset-env-standalone/babel-preset-env.min.js
 .idea/
 /.changelog
 lib/
+dist/

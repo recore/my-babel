@@ -1,4 +1,4 @@
-import sourceMap from "source-map";
+// import sourceMap from "source-map";
 
 /**
  * Build a sourcemap.
@@ -17,6 +17,7 @@ export default class SourceMap {
    */
 
   get() {
+    return {};
     if (!this._cachedMap) {
       const map = (this._cachedMap = new sourceMap.SourceMapGenerator({
         sourceRoot: this._opts.sourceRoot,

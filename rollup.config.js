@@ -4,9 +4,9 @@ import replace from 'rollup-plugin-replace';
 import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
-import ignore from 'rollup-plugin-ignore';
 import inject from 'rollup-plugin-inject';
 import globals from 'rollup-plugin-node-globals';
+import { terser } from "rollup-plugin-terser";
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -22,19 +22,20 @@ function generateAlias() {
       moduleAlias[`@babel/${mod.slice(6)}`] = join(__dirname, 'packages', mod, 'src/index.js');
     }
   });
-  // moduleAlias['debug'] = join(__dirname, 'src/debug.js');
+  moduleAlias['debug'] = join(__dirname, 'packages/main/debug.js');
+  moduleAlias['assert'] = join(__dirname, 'packages/main/assert.js');
+  moduleAlias['path'] = join(__dirname, 'packages/main/path.js');
   return moduleAlias;
 }
 
 export default {
   input: 'packages/main/index.js',
   output: {
-    file: 'lib/babel.js',
+    file: 'dist/my-babel.js',
     name: 'MyBabel',
-    format: 'iife',
+    format: 'umd',
   },
   plugins: [
-    ignore(['module', 'fs', 'net', 'buffer']),
     json(),
     alias(generateAlias()),
     resolve({
@@ -42,16 +43,12 @@ export default {
       preferBuiltins: false,
       extensions: [ '-browser.js', '.js', '.jsx', '.json' ],
     }),
-    commonjs({
-      sourceMap: false,
-      // ignoreGlobal: true,
-      include: ['node_modules/**', 'packages/*/node_modules/**']
-    }),
     replace({
       "process.env.NODE_ENV": '"production"',
       "process.env.BABEL_ENV": '"production"',
       "process.env.DEBUG": 'false',
       "process.env.NODE_DEBUG": 'false',
+      "Buffer.isBuffer": '() => false',
       "process.env": JSON.stringify({ NODE_ENV: "production" }),
       BABEL_VERSION: JSON.stringify(babelVersion),
       VERSION: JSON.stringify(babelVersion),
@@ -60,13 +57,15 @@ export default {
       babelrc: false,
       comments: false,
       envName: "standalone",
-      presets: [["@babel/preset-env", {
-        loose: true,
-        modules: false,
-        targets: {
-          chrome: "66"
-        }
-      }]],
+      presets: [
+        ["@babel/preset-env", {
+          loose: true,
+          modules: false,
+          targets: {
+            chrome: "66"
+          }
+        }]
+      ],
       plugins: [
         "@babel/plugin-transform-flow-strip-types",
         [
@@ -79,8 +78,28 @@ export default {
         "babel-plugin-transform-charcodes",
       ]
     }),
+    commonjs({
+      sourceMap: false,
+      include: ['node_modules/**', 'packages/*/node_modules/**'],
+    }),
     inject({
       'process.nextTick': ['process-es6', 'nextTick'],
-    })
+    }),
+    // FIXME: no effects
+    terser({
+      sourcemap: false,
+      numWorkers: 4,
+      mangle: true,
+      compress: true,
+      output: {
+        comments: function(node, comment) {
+          if (comment.type === "comment2") {
+            // multiline comment
+            return /@preserve|@license|@cc_on/i.test(comment.value);
+          }
+          return false;
+        }
+      }
+    }),
   ]
 };

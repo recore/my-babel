@@ -1,18 +1,18 @@
 // @flow
 
 import type { PluginPasses } from "../../config";
-import convertSourceMap, { type SourceMap } from "convert-source-map";
+// import convertSourceMap, { type SourceMap } from "convert-source-map";
 import generate from "@babel/generator";
 
 import type File from "./file";
-import mergeSourceMap from "./merge-map";
+// import mergeSourceMap from "./merge-map";
 
 export default function generateCode(
   pluginPasses: PluginPasses,
   file: File,
 ): {
   outputCode: string,
-  outputMap: SourceMap | null,
+  outputMap: null,
 } {
   const { opts, ast, code, inputMap } = file;
 
@@ -53,6 +53,7 @@ export default function generateCode(
 
   let { code: outputCode, map: outputMap } = result;
 
+  /*
   if (outputMap && inputMap) {
     outputMap = mergeSourceMap(inputMap.toObject(), outputMap);
   }
@@ -64,6 +65,7 @@ export default function generateCode(
   if (opts.sourceMaps === "inline") {
     outputMap = null;
   }
+  */
 
   return { outputCode, outputMap };
 }

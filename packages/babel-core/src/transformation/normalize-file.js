@@ -5,7 +5,7 @@ import buildDebug from "debug";
 import cloneDeep from "lodash/cloneDeep";
 import * as t from "@babel/types";
 import type { PluginPasses } from "../config";
-import convertSourceMap, { typeof Converter } from "convert-source-map";
+// import convertSourceMap, { typeof Converter } from "convert-source-map";
 import { parse } from "@babel/parser";
 import { codeFrameColumns } from "@babel/code-frame";
 import File from "./file/file";
@@ -28,7 +28,7 @@ export default function normalizeFile(
   code = `${code || ""}`;
 
   let inputMap = null;
-  if (options.inputSourceMap !== false) {
+  if (0 /*options.inputSourceMap !== false*/) {
     // If an explicit object is passed in, it overrides the processing of
     // source maps that may be in the file itself.
     if (typeof options.inputSourceMap === "object") {
