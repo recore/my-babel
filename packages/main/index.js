@@ -9,7 +9,7 @@
 /* global VERSION */
 /* eslint-disable max-len */
 
-import * as Babel from "@babel/core";
+import * as Context from "@babel/core";
 
 import externalhelpers from '@babel/plugin-external-helpers';
 import syntaxclassproperties from '@babel/plugin-syntax-class-properties';
@@ -60,7 +60,6 @@ import presetstage2 from './preset-stage-2';
 import presetstage3 from './preset-stage-3';
 import presetreact from '@babel/preset-react';
 import presettypescript from '@babel/preset-typescript';
-import { runScripts } from "./transformScriptTags";
 
 const isArray =
   Array.isArray ||
@@ -134,19 +133,21 @@ function processOptions(options) {
 }
 
 export function transform(code, options) {
-  return Babel.transform(code, processOptions(options));
+  return Context.transform(code, processOptions(options));
 }
 
 export function transformFromAst(ast, code, options) {
-  return Babel.transformFromAst(ast, code, processOptions(options));
+  return Context.transformFromAst(ast, code, processOptions(options));
 }
-export const availablePlugins = {};
-export const availablePresets = {};
-export const buildExternalHelpers = Babel.buildExternalHelpers;
+
+const availablePlugins = {};
+const availablePresets = {};
+const buildExternalHelpers = Context.buildExternalHelpers;
+
 /**
  * Registers a named plugin for use with Babel.
  */
-export function registerPlugin(name, plugin) {
+function registerPlugin(name, plugin) {
   if (availablePlugins.hasOwnProperty(name)) {
     console.warn(
       `A plugin named "${name}" is already registered, it will be overridden`,
@@ -158,7 +159,7 @@ export function registerPlugin(name, plugin) {
  * Registers multiple plugins for use with Babel. `newPlugins` should be an object where the key
  * is the name of the plugin, and the value is the plugin itself.
  */
-export function registerPlugins(newPlugins) {
+function registerPlugins(newPlugins) {
   Object.keys(newPlugins).forEach(name =>
     registerPlugin(name, newPlugins[name]),
   );
@@ -167,7 +168,7 @@ export function registerPlugins(newPlugins) {
 /**
  * Registers a named preset for use with Babel.
  */
-export function registerPreset(name, preset) {
+function registerPreset(name, preset) {
   if (availablePresets.hasOwnProperty(name)) {
     console.warn(
       `A preset named "${name}" is already registered, it will be overridden`,
@@ -179,7 +180,7 @@ export function registerPreset(name, preset) {
  * Registers multiple presets for use with Babel. `newPresets` should be an object where the key
  * is the name of the preset, and the value is the preset itself.
  */
-export function registerPresets(newPresets) {
+function registerPresets(newPresets) {
   Object.keys(newPresets).forEach(name =>
     registerPreset(name, newPresets[name]),
   );
@@ -250,17 +251,9 @@ registerPresets({
 
 export const version = VERSION;
 
-/**
- * Transform <script> tags with "text/babel" type.
- * @param {Array} scriptTags specify script tags to transform, transform all in the <head> if not given
- */
-export function transformScriptTags(scriptTags) {
-  runScripts(transform, scriptTags);
-}
-
-export { Babel };
-export * as parser from '@babel/parser';
+export { Context };
+export * from '@babel/parser';
 export * as types from '@babel/types';
-export generate from '@babel/generator';
-export traverse from "@babel/traverse";
-export template from "@babel/template";
+export * from '@babel/generator';
+export traverse, { NodePath, Scope, Hub } from '@babel/traverse';
+export template from '@babel/template';

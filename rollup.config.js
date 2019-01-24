@@ -31,7 +31,7 @@ function generateAlias() {
 export default {
   input: 'packages/main/index.js',
   output: {
-    file: 'dist/my-babel.js',
+    file: 'umd/my-babel.js',
     name: 'MyBabel',
     format: 'umd',
   },

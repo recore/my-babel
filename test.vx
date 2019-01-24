@@ -1,7 +1,12 @@
 <!--变量绑定--><span {...xxx}>你好，{username |> format}！</span>
 
 <!--双向绑定（1）-->
-输入姓名：<input x-model={username} />
+输入姓名：<input x-model={{
+  'a': 1,
+  a: 3,
+  1: 2,
+  [`2`]: 4
+}} />
 <!-- 相当于 value={username} onChange={(val) => username = val} -->
 
 <!--双向绑定（2）-->
