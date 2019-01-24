@@ -1,16 +1,18 @@
-import * as babelTypes from './types';
+import * as types from './types';
 
 /**
  * Parse the provided code as an entire ECMAScript program.
  */
-export function parse(input: string, options?: ParserOptions): babelTypes.File;
+export function parse(input: string, options?: ParserOptions): types.File;
 
 /**
  * Parse the provided code as a single expression.
  */
-export function parseExpression(input: string, options?: ParserOptions): babelTypes.Expression;
+export function parseExpression(input: string, options?: ParserOptions): types.Expression;
 
 export interface ParserOptions {
+  jsxTopLevel: boolean;
+
   /**
    * By default, import and export declarations can only appear at a program's top level.
    * Setting this option to true allows them anywhere where a statement is allowed.
@@ -56,7 +58,7 @@ export interface ParserOptions {
   /**
    * Array containing the plugins that you want to enable.
    */
-  plugins?: ParserPlugin[];
+  plugins?: any[];
 
   /**
    * Should the parser work in strict mode.
@@ -75,7 +77,7 @@ export interface ParserOptions {
   tokens?: boolean;
 }
 
-export const types: typeof babelTypes;
+export { types };
 
 export type ParserPlugin =
   'estree' |
@@ -104,10 +106,6 @@ export type ParserPlugin =
   'throwExpressions' |
   'pipelineOperator' |
   'nullishCoalescingOperator';
-
-declare namespace Babel {
-
-}
 
 export interface GenerateOptions {
   /**
@@ -151,7 +149,7 @@ export interface GenerateOptions {
    *
    * @default true
    */
-  comments?: boolean = true;
+  comments?: boolean;
 
   /**
    * Set to true to avoid adding whitespace for formatting
@@ -186,15 +184,13 @@ export interface GenerateOptions {
   jsonCompatibleStrings?: string;
 }
 
-export function generate(ast: babelTypes.Program, opts?: GenerateOptions): { code: string; map?: string };
+export function generate(ast: object, opts?: GenerateOptions): { code: string; map?: string };
 export type NodePath = any;
 export type Scope = any;
 export type Hub = any;
 export function traverse(
-  parent: babelTypes.Program | babelTypes.Program[],
+  parent: types.Program | types.Program[],
   opts?: object,
-  scope?: object,
-  state: object,
-  parentPath: object,
-): babelTypes.Program | babelTypes.Program[];
+  scope?: object
+): types.Program | types.Program[];
 export type template = any;

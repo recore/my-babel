@@ -254,6 +254,6 @@ export const version = VERSION;
 export { Context };
 export * from '@babel/parser';
 export * as types from '@babel/types';
-export * from '@babel/generator';
+export generate from '@babel/generator';
 export traverse, { NodePath, Scope, Hub } from '@babel/traverse';
 export template from '@babel/template';

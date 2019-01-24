@@ -1,7 +1,7 @@
 const { readFileSync } = require('fs');
-const { parser, generate } = require('./umd/my-babel.min');
+const { parse, generate } = require('./umd/my-babel.min');
 
-const ast = parser.parse(readFileSync(__dirname + '/test.vx', 'utf8').trimRight(), {
+const ast = parse(readFileSync(__dirname + '/test.vx', 'utf8').trimRight(), {
   jsxTopLevel: true,
   plugins: [
     'jsx',
