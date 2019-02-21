@@ -1,5 +1,20 @@
 import * as types from './types';
 
+export function transformFromAst(ast: types.File, code: string, options?: object): { code: string; ast: object };
+export function transform(code: string, options?: object): { code: string; ast: object };
+
+export type TraversalAncestors = ReadonlyArray<{
+  node: types.Node,
+  key: string,
+  index?: number,
+}>;
+export type TraversalHandler<T> = (node: types.Node, parent: TraversalAncestors, type: T) => void;
+export type TraversalHandlers<T> = {
+  enter?: TraversalHandler<T>,
+  exit?: TraversalHandler<T>,
+};
+export function traverse<T>(n: types.Node, h: TraversalHandler<T> | TraversalHandlers<T>, state?: T): void;
+
 /**
  * Parse the provided code as an entire ECMAScript program.
  */
@@ -11,7 +26,7 @@ export function parse(input: string, options?: ParserOptions): types.File;
 export function parseExpression(input: string, options?: ParserOptions): types.Expression;
 
 export interface ParserOptions {
-  jsxTopLevel: boolean;
+  jsxTopLevel?: boolean;
 
   /**
    * By default, import and export declarations can only appear at a program's top level.
@@ -79,44 +94,16 @@ export interface ParserOptions {
 
 export { types };
 
-export type ParserPlugin =
-  'estree' |
-  'jsx' |
-  'flow' |
-  'flowComments' |
-  'typescript' |
-  'doExpressions' |
-  'objectRestSpread' |
-  'decorators' |
-  'decorators-legacy' |
-  'classProperties' |
-  'classPrivateProperties' |
-  'classPrivateMethods' |
-  'exportDefaultFrom' |
-  'exportNamespaceFrom' |
-  'asyncGenerators' |
-  'functionBind' |
-  'functionSent' |
-  'dynamicImport' |
-  'numericSeparator' |
-  'optionalChaining' |
-  'importMeta' |
-  'bigInt' |
-  'optionalCatchBinding' |
-  'throwExpressions' |
-  'pipelineOperator' |
-  'nullishCoalescingOperator';
-
 export interface GenerateOptions {
   /**
    * Optional string to add as a block comment at the start of the output file
    */
-  auxiliaryCommentBefore: string;
+  auxiliaryCommentBefore?: string;
 
   /**
    * Optional string to add as a block comment at the end of the output file
    */
-  auxiliaryCommentAfter: string;
+  auxiliaryCommentAfter?: string;
 
   /**
    * Function that takes a comment (as a string) and returns true
@@ -126,7 +113,7 @@ export interface GenerateOptions {
    *
    * @default opts.comments
    */
-  shouldPrintComment: string;
+  shouldPrintComment?: string;
 
   /**
    * Attempt to use the same line numbers in the output code as
@@ -134,7 +121,7 @@ export interface GenerateOptions {
    *
    * @default false
    */
-  retainLines: boolean;
+  retainLines?: boolean;
 
   /**
    * Retain parens around function expressions
@@ -142,7 +129,7 @@ export interface GenerateOptions {
    *
    * @default false
    */
-  retainFunctionParens: boolean;
+  retainFunctionParens?: boolean;
 
   /**
    * Should comments be included in output
@@ -185,12 +172,8 @@ export interface GenerateOptions {
 }
 
 export function generate(ast: object, opts?: GenerateOptions): { code: string; map?: string };
-export type NodePath = any;
-export type Scope = any;
-export type Hub = any;
-export function traverse(
-  parent: types.Program | types.Program[],
-  opts?: object,
-  scope?: object
-): types.Program | types.Program[];
-export type template = any;
+export const NodePath: any;
+export const Scope: any;
+export const Hub: any;
+export const template: any;
+export const Context: any;

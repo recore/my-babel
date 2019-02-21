@@ -44,11 +44,13 @@ export default {
       extensions: [ '-browser.js', '.js', '.jsx', '.json' ],
     }),
     replace({
+      "global": 'window',
       "process.env.NODE_ENV": '"production"',
       "process.env.BABEL_ENV": '"production"',
       "process.env.DEBUG": 'false',
       "process.env.NODE_DEBUG": 'false',
       "Buffer.isBuffer": '() => false',
+      "process.platform": '"browser"',
       "process.env": JSON.stringify({ NODE_ENV: "production" }),
       BABEL_VERSION: JSON.stringify(babelVersion),
       VERSION: JSON.stringify(babelVersion),
