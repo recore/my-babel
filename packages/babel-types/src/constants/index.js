@@ -16,6 +16,7 @@ export const EQUALITY_BINARY_OPERATORS = ["==", "===", "!=", "!=="];
 export const COMPARISON_BINARY_OPERATORS = [
   ...EQUALITY_BINARY_OPERATORS,
   "in",
+  "of",
   "instanceof",
 ];
 export const BOOLEAN_BINARY_OPERATORS = [

@@ -207,7 +207,7 @@ export function AssignmentExpression(node: Object, parent: Object) {
   this.print(node.left, node);
 
   this.space();
-  if (node.operator === "in" || node.operator === "instanceof") {
+  if (node.operator === "in" || node.operator === "of" || node.operator === "instanceof") {
     this.word(node.operator);
   } else {
     this.token(node.operator);

@@ -562,7 +562,7 @@ defineType("Program", {
     body: {
       validate: chain(
         assertValueType("array"),
-        assertEach(assertNodeType("Statement")),
+        assertEach(assertNodeType("Statement", "JSXElement", "JSXFragment", "JSXText", "JSXExpressionContainer")),
       ),
     },
   },

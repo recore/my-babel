@@ -57,7 +57,7 @@ export interface AssignmentExpression extends BaseNode {
 
 export interface BinaryExpression extends BaseNode {
   type: "BinaryExpression";
-  operator: "+" | "-" | "/" | "%" | "*" | "**" | "&" | "|" | ">>" | ">>>" | "<<" | "^" | "==" | "===" | "!=" | "!==" | "in" | "instanceof" | ">" | "<" | ">=" | "<=";
+  operator: "+" | "-" | "/" | "%" | "*" | "**" | "&" | "|" | ">>" | ">>>" | "<<" | "^" | "==" | "===" | "!=" | "!==" | "in" | "of" | "instanceof" | ">" | "<" | ">=" | "<=";
   left: Expression;
   right: Expression;
 }
@@ -251,7 +251,7 @@ export interface NewExpression extends BaseNode {
 
 export interface Program extends BaseNode {
   type: "Program";
-  body: Array<Statement>;
+  body: Array<Statement|JSXFragment|JSXElement|JSXText|JSXExpressionContainer>;
   directives: Array<Directive>;
   sourceType: "script" | "module";
   interpreter: InterpreterDirective | null;
@@ -1496,7 +1496,7 @@ export type TSTypeElement = TSCallSignatureDeclaration | TSConstructSignatureDec
 export type TSType = TSAnyKeyword | TSUnknownKeyword | TSNumberKeyword | TSObjectKeyword | TSBooleanKeyword | TSStringKeyword | TSSymbolKeyword | TSVoidKeyword | TSUndefinedKeyword | TSNullKeyword | TSNeverKeyword | TSThisType | TSFunctionType | TSConstructorType | TSTypeReference | TSTypePredicate | TSTypeQuery | TSTypeLiteral | TSArrayType | TSTupleType | TSOptionalType | TSRestType | TSUnionType | TSIntersectionType | TSConditionalType | TSInferType | TSParenthesizedType | TSTypeOperator | TSIndexedAccessType | TSMappedType | TSLiteralType | TSExpressionWithTypeArguments;
 export function arrayExpression(elements?: Array<null | Expression | SpreadElement>): ArrayExpression;
 export function assignmentExpression(operator: string, left: LVal, right: Expression): AssignmentExpression;
-export function binaryExpression(operator: "+" | "-" | "/" | "%" | "*" | "**" | "&" | "|" | ">>" | ">>>" | "<<" | "^" | "==" | "===" | "!=" | "!==" | "in" | "instanceof" | ">" | "<" | ">=" | "<=", left: Expression, right: Expression): BinaryExpression;
+export function binaryExpression(operator: "+" | "-" | "/" | "%" | "*" | "**" | "&" | "|" | ">>" | ">>>" | "<<" | "^" | "==" | "===" | "!=" | "!==" | "in" | "of" | "instanceof" | ">" | "<" | ">=" | "<=", left: Expression, right: Expression): BinaryExpression;
 export function interpreterDirective(value: string): InterpreterDirective;
 export function directive(value: DirectiveLiteral): Directive;
 export function directiveLiteral(value: string): DirectiveLiteral;
@@ -1526,7 +1526,7 @@ export function regExpLiteral(pattern: string, flags?: string): RegExpLiteral;
 export function logicalExpression(operator: "||" | "&&" | "??", left: Expression, right: Expression): LogicalExpression;
 export function memberExpression(object: Expression, property: any, computed?: boolean, optional?: true | false | null): MemberExpression;
 export function newExpression(callee: Expression, _arguments: Array<Expression | SpreadElement | JSXNamespacedName>, optional?: true | false | null, typeArguments?: TypeParameterInstantiation | null, typeParameters?: TSTypeParameterInstantiation | null): NewExpression;
-export function program(body: Array<Statement>, directives?: Array<Directive>, sourceType?: "script" | "module", interpreter?: InterpreterDirective | null, sourceFile?: string | null): Program;
+export function program(body: Array<Statement|JSXFragment|JSXElement|JSXText|JSXExpressionContainer>, directives?: Array<Directive>, sourceType?: "script" | "module", interpreter?: InterpreterDirective | null, sourceFile?: string | null): Program;
 export function objectExpression(properties: Array<ObjectMethod | ObjectProperty | SpreadElement>): ObjectExpression;
 export function objectMethod(kind: "method" | "get" | "set" | undefined, key: any, params: Array<LVal>, body: BlockStatement, computed?: boolean, async?: boolean, decorators?: Array<Decorator> | null, generator?: boolean, returnType?: TypeAnnotation | TSTypeAnnotation | Noop | null, typeParameters?: TypeParameterDeclaration | TSTypeParameterDeclaration | Noop | null): ObjectMethod;
 export function objectProperty(key: any, value: Expression | PatternLike, computed?: boolean, shorthand?: boolean, decorators?: Array<Decorator> | null): ObjectProperty;
