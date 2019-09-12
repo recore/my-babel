@@ -169,6 +169,7 @@ export interface GenerateOptions {
    * @default  false
    */
   jsonCompatibleStrings?: string;
+  decoratorsBeforeExport?: boolean;
 }
 
 export function generate(ast: object, opts?: GenerateOptions): { code: string; map?: string };
