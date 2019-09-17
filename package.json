@@ -1,6 +1,6 @@
 {
   "name": "my-babel",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "license": "MIT",
   "types": "./types/index.d.ts",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "npm run build:umd && npm run build:lib"
   },
   "files": [
+    "lib",
     "umd",
     "types"
   ],
