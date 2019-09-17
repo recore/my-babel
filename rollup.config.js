@@ -17,25 +17,72 @@ function generateAlias() {
   const moduleAlias = {};
   paths.forEach(mod => {
     if (mod === 'babel-parser') {
-      moduleAlias['@babel/parser'] = join(__dirname, 'packages', 'vx-ast-parser/src/index.js');
+      moduleAlias['@babel/parser'] = join(__dirname, '../vx-ast-parser/src/index.js');
     } else if (mod.slice(0, 6) === 'babel-') {
       moduleAlias[`@babel/${mod.slice(6)}`] = join(__dirname, 'packages', mod, 'src/index.js');
     }
   });
-  moduleAlias['debug'] = join(__dirname, 'packages/main/debug.js');
-  moduleAlias['assert'] = join(__dirname, 'packages/main/assert.js');
-  moduleAlias['path'] = join(__dirname, 'packages/main/path.js');
+  if (process.env.BUILD_TARGET === 'umd') {
+    moduleAlias['debug'] = join(__dirname, 'packages/main/debug.js');
+    moduleAlias['assert'] = join(__dirname, 'packages/main/assert.js');
+    moduleAlias['path'] = join(__dirname, 'packages/main/path.js');
+  }
   return moduleAlias;
 }
 
-export default {
-  input: 'packages/main/index.js',
-  output: {
-    file: 'umd/my-babel.js',
-    name: 'MyBabel',
-    format: 'umd',
-  },
-  plugins: [
+let output = {
+  file: 'lib/my-babel.js',
+  format: 'cjs',
+};
+let plugins = [
+  json(),
+  alias(generateAlias()),
+  resolve({
+    browser: false,
+    preferBuiltins: true,
+    extensions: ['.js', '.jsx', '.json' ],
+  }),
+  replace({
+    BABEL_VERSION: JSON.stringify(babelVersion),
+    VERSION: JSON.stringify(babelVersion),
+  }),
+  babel({
+    babelrc: false,
+    comments: false,
+    envName: "standalone",
+    presets: [
+      ["@babel/preset-env", {
+        loose: true,
+        modules: false,
+        targets: {
+          chrome: "66"
+        }
+      }]
+    ],
+    plugins: [
+      "@babel/plugin-transform-flow-strip-types",
+      [
+        "@babel/plugin-proposal-class-properties",
+        { loose: true }
+      ],
+      "@babel/plugin-proposal-export-namespace-from",
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-proposal-numeric-separator",
+      "babel-plugin-transform-charcodes",
+    ]
+  }),
+  commonjs({
+    sourceMap: false,
+    ignoreGlobal: true,
+    include: ['node_modules/**', 'packages/*/node_modules/**'],
+  }),
+];
+if (process.env.BUILD_TARGET === 'umd') {
+  output = [
+    { file: 'umd/my-babel.js', name: 'MyBabel', format: 'umd' },
+    // { file: 'umd/my-babel.min.js', name: 'MyBabel', format: 'umd' },
+  ];
+  plugins = [
     json(),
     alias(generateAlias()),
     resolve({
@@ -82,6 +129,7 @@ export default {
     }),
     commonjs({
       sourceMap: false,
+      ignoreGlobal: true,
       include: ['node_modules/**', 'packages/*/node_modules/**'],
     }),
     inject({
@@ -89,6 +137,7 @@ export default {
     }),
     // FIXME: no effects
     terser({
+      include: [/^.+\.min\.js$/],
       sourcemap: false,
       numWorkers: 4,
       mangle: true,
@@ -103,5 +152,11 @@ export default {
         }
       }
     }),
-  ]
+  ];
+}
+
+export default {
+  input: 'packages/main/index.js',
+  output,
+  plugins,
 };

@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs');
-const { parse, generate } = require('./umd/my-babel.min');
+const { parse, generate } = require('./lib/my-babel');
 
 const ast = parse(readFileSync(__dirname + '/test.vx', 'utf8').trimRight(), {
   jsxTopLevel: true,
